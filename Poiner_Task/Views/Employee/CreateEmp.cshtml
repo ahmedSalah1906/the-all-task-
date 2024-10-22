@@ -1,0 +1,84 @@
+﻿@model Poiner_Task.EmployeeViewModel.EmployeeVm
+
+<form asp-action="Create" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label col-md-2">Name</label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Code" class="control-label col-md-2">Code</label>
+        <div class="col-md-10">
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <h3>Custom Properties</h3>
+
+        @if (Model.CustomProperties != null && Model.CustomProperties.Any())
+        {
+            for (int i = 0; i < Model.CustomProperties.Count; i++)
+            {
+
+                var property = Model.CustomProperties[i];
+                <input type="hidden" name="CustomProperties[@i].Name" value="@property.Name" />
+                <div class="form-group">
+                    <label>@property.Name</label>
+                    <input type="hidden" name="CustomProperties[@i].PropertyId" value="@property.PropertyId" />
+
+                    @switch (property.Type)
+                    {
+                        case PropertyType.String:
+                            <input type="text" name="CustomProperties[@i].Value" class="form-control" />
+                            <span asp-validation-for="CustomProperties[@i].Value" class="text-danger"></span>
+                            break;
+                        case PropertyType.Integer:
+                            <input type="number" name="CustomProperties[@i].Value" class="form-control" />
+                            <span asp-validation-for="CustomProperties[@i].Value" class="text-danger"></span>
+                            break;
+                        case PropertyType.Date:
+                            <input type="date" name="CustomProperties[@i].Value" class="form-control" />
+                            <span asp-validation-for="CustomProperties[@i].Value" class="text-danger"></span>
+                            break;
+                        case PropertyType.Dropdown:
+                            <select name="CustomProperties[@i].Value" class="form-control">
+                                @if (property.DropdownOptions != null)
+                                {
+                                    <option>Select</option>
+                                    foreach (var option in property.DropdownOptions)
+                                    {
+                                        <option value="@option">@option</option>
+                                    }
+                                }
+                                <span asp-validation-for="CustomProperties[@i].Value" class="text-danger"></span>
+                            </select>
+                            break;
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p>No custom properties available.</p>
+        }
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">Create Employee</button>
+        </div>
+    </div>
+</form>
+
+<div class="form-group">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

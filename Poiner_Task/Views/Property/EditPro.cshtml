@@ -1,0 +1,70 @@
+﻿@model Poiner_Task.Models.PropertyForEmployee
+
+<form asp-action="Edit" method="post" class="form-horizontal">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label for="Name">Property Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Type">Property Type</label>
+        <select class="form-control" id="Type" name="Type" onchange="toggleDropdownOptions(this)">
+            <option>Select</option>
+            <option value="String">String</option>
+            <option value="Integer">Integer</option>
+            <option value="Date">Date</option>
+            <option value="Dropdown">Dropdown</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsRequired" class="control-label"></label>
+        <input type="checkbox" asp-for="IsRequired" />
+    </div>
+
+    <div id="dropdownOptionsContainer" style="display: none;">
+        <h4>Dropdown Options</h4>
+        <div id="dropdownOptions">
+            @if (Model.DropdownOptions != null)
+            {
+                foreach (var option in Model.DropdownOptions)
+                {
+                    <div class="option-row">
+                        <input type="text" name="DropdownOptions[]" class="form-control mb-2" value="@option" />
+                    </div>
+                }
+            }
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="addOption()">Add Another Option</button>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Save Property</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function toggleDropdownOptions(selectElement) {
+            const dropdownContainer = document.getElementById("dropdownOptionsContainer");
+            if (selectElement.value === "Dropdown") {
+                dropdownContainer.style.display = "block";
+            } else {
+                dropdownContainer.style.display = "none";
+            }
+        }
+
+        function addOption() {
+            const optionsContainer = document.getElementById("dropdownOptions");
+            const optionRow = document.createElement("div");
+            optionRow.className = "option-row";
+            optionRow.innerHTML = `
+                <input type="text" name="DropdownOptions[]" class="form-control mb-2" placeholder="Enter option" />
+            `;
+            optionsContainer.appendChild(optionRow);
+        }
+    </script>
+}

@@ -1,0 +1,36 @@
+﻿@model List<Poiner_Task.Models.PropertyForEmployee>
+
+<h2>Property List</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Property Name</th>
+            <th>Property Type</th>
+            <th>Required</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var property in Model)
+        {
+            <tr>
+                <td>@property.Name</td>
+                <td>@property.Type</td>
+                <td>@(property.IsRequired ? "Yes" : "No")</td>
+                <td>
+                   
+                    <a asp-action="Edit" asp-route-id="@property.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                    
+                    <form asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@property.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this property?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Add" class="btn btn-primary">Add New Property</a>
